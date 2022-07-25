@@ -7,7 +7,7 @@ from monitor.models import PSEAsing, PSEAsingStatus, PSELokal, PSELokalStatus, S
 from django.contrib.contenttypes.models import ContentType
 import os
 import json 
-import requests
+from incapsula import IncapSession
 import dateparser
 
 def dosaveasing(datas):
@@ -126,8 +126,10 @@ def dosavelokal(datas):
             stt.save()  
 
 def docrawl(path,step,source):
+    session = IncapSession()
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
     try:
-        r = requests.get('https://pse.kominfo.go.id/static/json-static/'+path+'/'+str(step)+'.json', verify=False)
+        r = session.get('https://pse.kominfo.go.id/static/json-static/'+path+'/'+str(step)+'.json', headers=headers)
         data = r.json()
     except:
         data = None 
@@ -139,8 +141,10 @@ def docrawl(path,step,source):
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
+        session = IncapSession()
+        headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
         try:
-            r = requests.get('https://pse.kominfo.go.id/static/json-static/ASING_TERDAFTAR/0.json', verify=False)
+            r = session.get('https://pse.kominfo.go.id/static/json-static/ASING_TERDAFTAR/0.json', headers=headers)
             data = r.json()
         except:
             data = None 
@@ -152,7 +156,7 @@ class Command(BaseCommand):
             for i in range(1,steps+2):
                 docrawl('ASING_TERDAFTAR', i, 'asing')
         try:
-            r = requests.get('https://pse.kominfo.go.id/static/json-static/ASING_DIHENTIKAN_SEMENTARA/0.json', verify=False)
+            r = session.get('https://pse.kominfo.go.id/static/json-static/ASING_DIHENTIKAN_SEMENTARA/0.json', headers=headers)
             data = r.json()
         except:
             data = None 
@@ -164,7 +168,7 @@ class Command(BaseCommand):
             for i in range(1,steps+2):
                 docrawl('ASING_DIHENTIKAN_SEMENTARA', i, 'asing')
         try:
-            r = requests.get('https://pse.kominfo.go.id/static/json-static/ASING_DICABUT/0.json', verify=False)
+            r = session.get('https://pse.kominfo.go.id/static/json-static/ASING_DICABUT/0.json', headers=headers)
             data = r.json()
         except:
             data = None 
@@ -177,7 +181,7 @@ class Command(BaseCommand):
                 docrawl('ASING_DICABUT', i, 'asing')
 
         try:
-            r = requests.get('https://pse.kominfo.go.id/static/json-static/LOKAL_TERDAFTAR/0.json', verify=False)
+            r = session.get('https://pse.kominfo.go.id/static/json-static/LOKAL_TERDAFTAR/0.json', headers=headers)
             data = r.json()
         except:
             data = None 
@@ -189,7 +193,7 @@ class Command(BaseCommand):
             for i in range(1,steps+2):
                 docrawl('LOKAL_TERDAFTAR', i, 'lokal')
         try:
-            r = requests.get('https://pse.kominfo.go.id/static/json-static/LOKAL_DIHENTIKAN_SEMENTARA/0.json', verify=False)
+            r = session.get('https://pse.kominfo.go.id/static/json-static/LOKAL_DIHENTIKAN_SEMENTARA/0.json', headers=headers)
             data = r.json()
         except:
             data = None 
@@ -201,7 +205,7 @@ class Command(BaseCommand):
             for i in range(1,steps+2):
                 docrawl('LOKAL_DIHENTIKAN_SEMENTARA', i, 'lokal')
         try:
-            r = requests.get('https://pse.kominfo.go.id/static/json-static/LOKAL_DICABUT/0.json', verify=False)
+            r = session.get('https://pse.kominfo.go.id/static/json-static/LOKAL_DICABUT/0.json', headers=headers)
             data = r.json()
         except:
             data = None 
