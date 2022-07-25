@@ -3,7 +3,7 @@ from django.db.models import Count, Max, Q
 from datetime import datetime, timedelta
 from django.conf import settings
 from django.utils import timezone
-from monitor.models import PSEAsing, PSEAsingStatus, PSELokal, PSELokalStatus, Sektor
+from monitor.models import PSEAsing, PSEAsingStatus, PSELokal, PSELokalStatus, Sektor, LastUpdate
 from django.contrib.contenttypes.models import ContentType
 import os
 import json 
@@ -216,3 +216,6 @@ class Command(BaseCommand):
             dosavelokal(data['data'])
             for i in range(1,steps+2):
                 docrawl('LOKAL_DICABUT', i, 'lokal')
+        lastupdate = LastUpdate()
+        lastupdate.title = "Update pada %s" % (datetime.now())
+        lastupdate.save()
