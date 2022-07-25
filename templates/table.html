@@ -17,6 +17,9 @@
                             <th>Sektor</th>
                             <th>Perusahaan</th>
                             <th>Tanggal Terbit</th>
+                            {% if 'search' in request.path %} 
+                            <th>Status</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -38,6 +41,17 @@
                             <td>{% for cat in data.sektor.all %}{{ cat.title }}{% if not forloop.last %},{% endif %}{% endfor %}</td>
                             <td>{{data.nama_perusahaan}}</td>
                             <td>{{data.tanggal_daftar|date:"Y-m-d"}}</td>
+                            {% if 'search' in request.path %} 
+                            {% if data.is_blocked %}
+                            <td>DICABUT</td>
+                            {% else %} 
+                            {% if data.is_suspended %} 
+                            <td>SUSPENDED</td>
+                            {% else %}
+                            <td>TERDAFTAR</td>
+                            {% endif %} 
+                            {% endif %}
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
