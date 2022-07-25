@@ -17,7 +17,6 @@ env/
 build/
 component/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
