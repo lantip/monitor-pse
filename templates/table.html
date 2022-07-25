@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content">
+    <div class="container py-5">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title">Daftar {{title}}</h1>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nama Sistem</th>
+                            <th>Website</th>
+                            <th>Sektor</th>
+                            <th>Perusahaan</th>
+                            <th>Tanggal Terbit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for data in datas %} 
+                        <tr>
+                            <td>{{data.nama}}</td>
+                            <td>
+                                <div class="btn-list">
+                                    <a href="{{data.website}}" alt="{{data.website}}" title="{{data.website}}" target="_blank">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+                                            <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+                                        </svg>
+                                      Link
+                                    </a>
+                                </div>
+                            </td>
+                            <td>{% for cat in data.sektor.all %}{{ cat.title }}{% if not forloop.last %},{% endif %}{% endfor %}</td>
+                            <td>{{data.nama_perusahaan}}</td>
+                            <td>{{data.tanggal_daftar|date:"Y-m-d"}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% if datas %}
+                <ul class="pagination justify-content-center flex-wrap mt-2 mb-4">
+                    {% if datas.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ datas.previous_page_number }}{% if request.GET.search %}&search={{request.GET.search}}{% endif %}{% if request.GET.theme %}&theme={{request.GET.theme}}{% endif %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="15 6 9 12 15 18" /></svg> prev
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="disabled page-item" >
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="15 6 9 12 15 18" /></svg> prev
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% for i in page_range|default_if_none:datas.paginator.get_elided_page_range %}
+                        {% if datas.number == i %}
+                            <li class="active page-item"><span class="page-link">{{ i }}</span>
+                            </li>
+                        {% else %}
+                            {% if i == datas.paginator.ELLIPSIS %}
+                                <li class="page-item"><span class="page-link">{{ i }}</span></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{ i }}{% if request.GET.search %}&search={{request.GET.search}}{% endif %}{% if request.GET.theme %}&theme={{request.GET.theme}}{% endif %}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if datas.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ datas.next_page_number }}{% if request.GET.search %}&search={{request.GET.search}}{% endif %}{% if request.GET.theme %}&theme={{request.GET.theme}}{% endif %}">
+                                next <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 6 15 12 9 18" /></svg>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="disabled page-item">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                next <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 6 15 12 9 18" /></svg>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
